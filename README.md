@@ -43,8 +43,8 @@ For more details on the examples, visit [All examples link](https://github/Gabri
 package main
 
 import (
-	"github.com/GabrielHCataldo/go-error-detail/errors"
-	"github.com/GabrielHCataldo/go-logger/logger"
+    "github.com/GabrielHCataldo/go-error-detail/errors"
+    "github.com/GabrielHCataldo/go-logger/logger"
 )
 
 func main() {
