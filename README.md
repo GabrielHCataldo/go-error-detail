@@ -1,4 +1,4 @@
-Go Helper
+Go Error Detail
 =================
 <!--suppress ALL -->
 <img align="right" src="gopher-debug.png" alt="">
