@@ -18,6 +18,10 @@ func TestNewE(t *testing.T) {
 	logger.Info("err:", NewE("/test", errors.New("test error detail")))
 }
 
+func TestNewESkipCaller(t *testing.T) {
+	logger.Info("err:", NewESkipCaller(1, "/test", errors.New("test error detail")))
+}
+
 func TestNewSkipCaller(t *testing.T) {
 	logger.Info("err:", NewSkipCaller(1, "test error detail"))
 }
