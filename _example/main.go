@@ -9,6 +9,7 @@ import (
 func main() {
 	err := simple()
 	logger.Error("simple result:", err)
+	all()
 }
 
 func simple() error {
