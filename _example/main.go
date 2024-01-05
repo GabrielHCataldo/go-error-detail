@@ -31,4 +31,7 @@ func all() {
 	logger.Error(errors.NewByErrSkipCaller(1, errJson))
 	logger.Error(errors.NewEByErrSkipCaller(1, errJson, "/endpoint"))
 	logger.Error(errors.NewEByErrSkipCaller(1, errJson, "/endpoint"))
+	err = errors.New("test")
+	target := errors.New("test")
+	logger.Info("errors is:", errors.Is(err, target))
 }

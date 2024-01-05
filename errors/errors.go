@@ -11,11 +11,11 @@ import (
 
 type ErrorDetail struct {
 	// File name file from caller new error
-	File string `json:"file"`
+	File string `json:"file,omitempty"`
 	// Line from caller new error
-	Line int `json:"line"`
+	Line int `json:"line,omitempty"`
 	// Message error
-	Message string `json:"message"`
+	Message string `json:"message,omitempty"`
 	// Endpoint from error
 	Endpoint string `json:"endpoint,omitempty"`
 }
@@ -105,19 +105,43 @@ func NewEByErrSkipCaller(skipCaller int, err error, endpoint string) *ErrorDetai
 	return e
 }
 
-func NewError(message ...any) error {
+// NewErr new error interface
+func NewErr(message ...any) error {
 	return errors.New(printMessage(message...))
+}
+
+// Is validate equal errors, if ErrorDetail we only consider the ErrorDetail.Message field
+func Is(err, target error) bool {
+	if IsErrorDetail(err) && IsErrorDetail(target) {
+		errDetail, _ := parseErrorToDetail(err)
+		targetDetail, _ := parseErrorToDetail(target)
+		return equal(*errDetail, *targetDetail)
+	}
+	return errors.Is(err, target)
+}
+
+// IsErrorDetail check if error interface is ErrorDetail
+func IsErrorDetail(err error) bool {
+	_, errParse := parseErrorToDetail(err)
+	return errParse == nil
+}
+
+// Error print the error as a string, genetic implementation of error in go
+func (e *ErrorDetail) Error() string {
+	b, _ := json.Marshal(e)
+	return string(b)
+}
+
+func equal(a, b ErrorDetail) bool {
+	return a.Message == b.Message
 }
 
 func printMessage(v ...any) string {
 	return strings.Replace(fmt.Sprintln(v...), "\n", "", -1)
 }
 
-func (e *ErrorDetail) Error() string {
-	r := ""
-	if helper.IsNotEmpty(e) {
-		b, _ := json.Marshal(e)
-		r = string(b)
-	}
-	return r
+func parseErrorToDetail(err error) (*ErrorDetail, error) {
+	var dest ErrorDetail
+	errConvert := helper.ConvertToDest(err, &dest)
+	return &dest, errConvert
 }
