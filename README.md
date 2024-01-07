@@ -1,22 +1,22 @@
-Go Error Detail
+Go Errors Detail
 =================
 <!--suppress ALL -->
 <img align="right" src="gopher-debug.png" alt="">
 
-[![Project status](https://img.shields.io/badge/version-v1.0.2-vividgreen.svg)](https://github.com/GabrielHCataldo/go-error-detail/releases/tag/v1.0.2)
-[![Go Report Card](https://goreportcard.com/badge/github.com/GabrielHCataldo/go-error-detail)](https://goreportcard.com/report/github.com/GabrielHCataldo/go-error-detail)
-[![Coverage Status](https://coveralls.io/repos/GabrielHCataldo/go-error-detail/badge.svg?branch=main&service=github)](https://coveralls.io/github/GabrielHCataldo/go-error-detail?branch=main)
-[![Open Source Helpers](https://www.codetriage.com/gabrielhcataldo/go-error-detail/badges/users.svg)](https://www.codetriage.com/gabrielhcataldo/go-error-detail)
-[![GoDoc](https://godoc.org/github/GabrielHCataldo/go-error-detail?status.svg)](https://pkg.go.dev/github.com/GabrielHCataldo/go-error-detail/errors)
+[![Project status](https://img.shields.io/badge/version-v1.0.3-vividgreen.svg)](https://github.com/GabrielHCataldo/go-errors/releases/tag/v1.0.3)
+[![Go Report Card](https://goreportcard.com/badge/github.com/GabrielHCataldo/go-errors)](https://goreportcard.com/report/github.com/GabrielHCataldo/go-errors)
+[![Coverage Status](https://coveralls.io/repos/GabrielHCataldo/go-errors/badge.svg?branch=main&service=github)](https://coveralls.io/github/GabrielHCataldo/go-errors?branch=main)
+[![Open Source Helpers](https://www.codetriage.com/gabrielhcataldo/go-errors/badges/users.svg)](https://www.codetriage.com/gabrielhcataldo/go-errors)
+[![GoDoc](https://godoc.org/github/GabrielHCataldo/go-errors?status.svg)](https://pkg.go.dev/github.com/GabrielHCataldo/go-errors/errors)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
 
-[//]: # ([![build workflow]&#40;https://github.com/GabrielHCataldo/go-error-detail/actions/workflows/go.yml/badge.svg&#41;]&#40;https://github.com/GabrielHCataldo/go-error-detail/actions&#41;)
+[//]: # ([![build workflow]&#40;https://github.com/GabrielHCataldo/go-errors/actions/workflows/go.yml/badge.svg&#41;]&#40;https://github.com/GabrielHCataldo/go-errors/actions&#41;)
 
-[//]: # ([![Source graph]&#40;https://sourcegraph.com/github.com/go-error-detail/errors/-/badge.svg&#41;]&#40;https://sourcegraph.com/github.com/go-error-detail/errors?badge&#41;)
+[//]: # ([![Source graph]&#40;https://sourcegraph.com/github.com/go-errors/errors/-/badge.svg&#41;]&#40;https://sourcegraph.com/github.com/go-errors/errors?badge&#41;)
 
-[//]: # ([![TODOs]&#40;https://badgen.net/https/api.tickgit.com/badgen/github.com/GabrielHCataldo/go-error-detail/errors&#41;]&#40;https://www.tickgit.com/browse?repo=github.com/GabrielHCataldo/go-error-detail&#41;)
+[//]: # ([![TODOs]&#40;https://badgen.net/https/api.tickgit.com/badgen/github.com/GabrielHCataldo/go-errors/errors&#41;]&#40;https://www.tickgit.com/browse?repo=github.com/GabrielHCataldo/go-errors&#41;)
 
-The go-error-detail project came to make the return of errors, very common in Golang, clearer, thus facilitating the 
+The go-errors project came to make the return of errors, very common in Golang, clearer, thus facilitating the 
 debugging of your applications.
 
 Installation
@@ -24,18 +24,18 @@ Installation
 
 Use go get.
 
-	go get github.com/GabrielHCataldo/go-error-detail
+	go get github.com/GabrielHCataldo/go-errors
 
-Then import the go-error-detail package into your own code.
+Then import the go-errors package into your own code.
 
 ```go
-import "github.com/GabrielHCataldo/go-error-detail/errors"
+import "github.com/GabrielHCataldo/go-errors/errors"
 ```
 
 Usability and documentation
 ------------
 **IMPORTANT**: Always check the documentation in the structures and functions fields.
-For more details on the examples, visit [All examples link](https://github/GabrielHCataldo/go-error-detail/blob/main/_example/main)
+For more details on the examples, visit [All examples link](https://github/GabrielHCataldo/go-errors/blob/main/_example/main)
 
 ### Simple example
 
@@ -43,7 +43,7 @@ For more details on the examples, visit [All examples link](https://github/Gabri
 package main
 
 import (
-    "github.com/GabrielHCataldo/go-error-detail/errors"
+    "github.com/GabrielHCataldo/go-errors/errors"
     "github.com/GabrielHCataldo/go-logger/logger"
 )
 
@@ -59,7 +59,7 @@ func simple() error {
 
 Output:
 
-    [ERROR 2024/01/04 09:11:18] main.go:11: simple result: {"file":"/Users/gabrielcataldo/Innovfor/go-error-detail/_example/main.go","line":15,"message":"error by message with any value 2 true"}
+    [ERROR 2024/01/04 09:11:18] main.go:11: simple result: {"file":"/Users/gabrielcataldo/Innovfor/go-errors/_example/main.go","line":15,"message":"error by message with any value 2 true"}
 
 How to contribute
 ------

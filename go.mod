@@ -1,9 +1,9 @@
-module github.com/GabrielHCataldo/go-error-detail
+module github.com/GabrielHCataldo/go-errors
 
 go 1.21.3
 
 require (
-	github.com/GabrielHCataldo/go-helper v1.0.5
+	github.com/GabrielHCataldo/go-helper v1.0.6
 	github.com/GabrielHCataldo/go-logger v1.0.9
 )
 

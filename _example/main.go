@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/GabrielHCataldo/go-error-detail/errors"
+	"github.com/GabrielHCataldo/go-errors/errors"
 	"github.com/GabrielHCataldo/go-logger/logger"
 )
 
