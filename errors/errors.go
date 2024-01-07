@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-type ErrorDetail struct {
+type errorDetail struct {
 	// File name file from caller new error
 	File string `json:"file,omitempty"`
 	// Line from caller new error
@@ -21,9 +21,9 @@ type ErrorDetail struct {
 }
 
 // New error detail with message values separate per space
-func New(message ...any) *ErrorDetail {
+func New(message ...any) error {
 	_, file, line, _ := runtime.Caller(1)
-	return &ErrorDetail{
+	return &errorDetail{
 		Message: printMessage(message...),
 		Line:    line,
 		File:    file,
@@ -31,11 +31,11 @@ func New(message ...any) *ErrorDetail {
 }
 
 // NewByErr error detail by error, if error is nil return nil
-func NewByErr(err error) *ErrorDetail {
-	var e *ErrorDetail
+func NewByErr(err error) error {
+	var e *errorDetail
 	if helper.IsNotNil(err) {
 		_, file, line, _ := runtime.Caller(1)
-		e = &ErrorDetail{
+		e = &errorDetail{
 			Message: err.Error(),
 			Line:    line,
 			File:    file,
@@ -45,9 +45,9 @@ func NewByErr(err error) *ErrorDetail {
 }
 
 // NewE error detail with endpoint and message
-func NewE(endpoint string, message ...any) *ErrorDetail {
+func NewE(endpoint string, message ...any) error {
 	_, file, line, _ := runtime.Caller(1)
-	return &ErrorDetail{
+	return &errorDetail{
 		Message:  printMessage(message...),
 		Line:     line,
 		File:     file,
@@ -56,9 +56,9 @@ func NewE(endpoint string, message ...any) *ErrorDetail {
 }
 
 // NewSkipCaller error detail with message values separate per space and skipCaller
-func NewSkipCaller(skipCaller int, message ...any) *ErrorDetail {
+func NewSkipCaller(skipCaller int, message ...any) error {
 	_, file, line, _ := runtime.Caller(skipCaller)
-	return &ErrorDetail{
+	return &errorDetail{
 		Message: printMessage(message...),
 		Line:    line,
 		File:    file,
@@ -66,9 +66,9 @@ func NewSkipCaller(skipCaller int, message ...any) *ErrorDetail {
 }
 
 // NewESkipCaller error detail with message values separate per space with skipCaller and endpoint
-func NewESkipCaller(skipCaller int, endpoint string, message ...any) *ErrorDetail {
+func NewESkipCaller(skipCaller int, endpoint string, message ...any) *errorDetail {
 	_, file, line, _ := runtime.Caller(skipCaller)
-	return &ErrorDetail{
+	return &errorDetail{
 		Message:  printMessage(message...),
 		Line:     line,
 		File:     file,
@@ -77,11 +77,11 @@ func NewESkipCaller(skipCaller int, endpoint string, message ...any) *ErrorDetai
 }
 
 // NewByErrSkipCaller error detail by error with skipCaller, if error is nil return nil
-func NewByErrSkipCaller(skipCaller int, err error) *ErrorDetail {
-	var e *ErrorDetail
+func NewByErrSkipCaller(skipCaller int, err error) error {
+	var e *errorDetail
 	if helper.IsNotNil(err) {
 		_, file, line, _ := runtime.Caller(skipCaller)
-		e = &ErrorDetail{
+		e = &errorDetail{
 			Message: err.Error(),
 			Line:    line,
 			File:    file,
@@ -91,11 +91,11 @@ func NewByErrSkipCaller(skipCaller int, err error) *ErrorDetail {
 }
 
 // NewEByErrSkipCaller error detail by error with skipCaller, if error is nil return nil
-func NewEByErrSkipCaller(skipCaller int, err error, endpoint string) *ErrorDetail {
-	var e *ErrorDetail
+func NewEByErrSkipCaller(skipCaller int, err error, endpoint string) error {
+	var e *errorDetail
 	if helper.IsNotNil(err) {
 		_, file, line, _ := runtime.Caller(skipCaller)
-		e = &ErrorDetail{
+		e = &errorDetail{
 			Message:  err.Error(),
 			Line:     line,
 			File:     file,
@@ -105,12 +105,7 @@ func NewEByErrSkipCaller(skipCaller int, err error, endpoint string) *ErrorDetai
 	return e
 }
 
-// NewErr new error interface
-func NewErr(message ...any) error {
-	return errors.New(printMessage(message...))
-}
-
-// Is validate equal errors, if ErrorDetail we only consider the ErrorDetail.Message field
+// Is validate equal errors, if errorDetail we only consider the errorDetail.Message field
 func Is(err, target error) bool {
 	if IsErrorDetail(err) && IsErrorDetail(target) {
 		errDetail, _ := parseErrorToDetail(err)
@@ -120,19 +115,24 @@ func Is(err, target error) bool {
 	return errors.Is(err, target)
 }
 
-// IsErrorDetail check if error interface is ErrorDetail
+// IsNot validate not equal errors, if errorDetail we only consider the errorDetail.Message field
+func IsNot(err, target error) bool {
+	return !Is(err, target)
+}
+
+// IsErrorDetail check if error interface is errorDetail
 func IsErrorDetail(err error) bool {
 	_, errParse := parseErrorToDetail(err)
 	return errParse == nil
 }
 
 // Error print the error as a string, genetic implementation of error in go
-func (e *ErrorDetail) Error() string {
+func (e *errorDetail) Error() string {
 	b, _ := json.Marshal(e)
 	return string(b)
 }
 
-func equal(a, b ErrorDetail) bool {
+func equal(a, b errorDetail) bool {
 	return a.Message == b.Message
 }
 
@@ -140,8 +140,8 @@ func printMessage(v ...any) string {
 	return strings.Replace(fmt.Sprintln(v...), "\n", "", -1)
 }
 
-func parseErrorToDetail(err error) (*ErrorDetail, error) {
-	var dest ErrorDetail
+func parseErrorToDetail(err error) (*errorDetail, error) {
+	var dest errorDetail
 	errConvert := helper.ConvertToDest(err, &dest)
 	return &dest, errConvert
 }

@@ -3,7 +3,7 @@ Go Error Detail
 <!--suppress ALL -->
 <img align="right" src="gopher-debug.png" alt="">
 
-[![Project status](https://img.shields.io/badge/version-v1.0.1-vividgreen.svg)](https://github.com/GabrielHCataldo/go-error-detail/releases/tag/v1.0.1)
+[![Project status](https://img.shields.io/badge/version-v1.0.2-vividgreen.svg)](https://github.com/GabrielHCataldo/go-error-detail/releases/tag/v1.0.2)
 [![Go Report Card](https://goreportcard.com/badge/github.com/GabrielHCataldo/go-error-detail)](https://goreportcard.com/report/github.com/GabrielHCataldo/go-error-detail)
 [![Coverage Status](https://coveralls.io/repos/GabrielHCataldo/go-error-detail/badge.svg?branch=main&service=github)](https://coveralls.io/github/GabrielHCataldo/go-error-detail?branch=main)
 [![Open Source Helpers](https://www.codetriage.com/gabrielhcataldo/go-error-detail/badges/users.svg)](https://www.codetriage.com/gabrielhcataldo/go-error-detail)

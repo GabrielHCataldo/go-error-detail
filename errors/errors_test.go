@@ -34,10 +34,6 @@ func TestNewEByErrSkipCaller(t *testing.T) {
 	logger.Info("err:", NewEByErrSkipCaller(1, errors.New("test error detail"), "/test"))
 }
 
-func TestNewErr(t *testing.T) {
-	logger.Info("err:", NewErr("test error detail"))
-}
-
 func TestIs(t *testing.T) {
 	err := errors.New("test")
 	target := New("test")
@@ -46,6 +42,16 @@ func TestIs(t *testing.T) {
 	errDetail := New("test")
 	targetDetail := New("test")
 	logger.Info("errors is:", Is(errDetail, targetDetail))
+}
+
+func TestIsNot(t *testing.T) {
+	err := errors.New("test")
+	target := New("test")
+	logger.Info("errors is not:", IsNot(err, target))
+
+	errDetail := New("test")
+	targetDetail := New("test")
+	logger.Info("errors is not:", IsNot(errDetail, targetDetail))
 }
 
 func TestError(t *testing.T) {
