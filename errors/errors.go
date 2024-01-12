@@ -3,10 +3,8 @@ package errors
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/GabrielHCataldo/go-helper/helper"
 	"runtime"
-	"strings"
 )
 
 type errorDetail struct {
@@ -34,6 +32,10 @@ func New(message ...any) error {
 func NewByErr(err error) error {
 	var e *errorDetail
 	if helper.IsNotNil(err) {
+		e, _ = parseErrorToDetail(err)
+		if helper.IsNotNil(e) {
+			return e
+		}
 		_, file, line, _ := runtime.Caller(1)
 		e = &errorDetail{
 			Message: err.Error(),
@@ -55,6 +57,25 @@ func NewE(endpoint string, message ...any) error {
 	}
 }
 
+// NewEByErr error detail with endpoint and message
+func NewEByErr(endpoint string, err error) error {
+	var e *errorDetail
+	if helper.IsNotNil(err) {
+		e, _ = parseErrorToDetail(err)
+		if helper.IsNotNil(e) {
+			return e
+		}
+		_, file, line, _ := runtime.Caller(1)
+		e = &errorDetail{
+			Message:  err.Error(),
+			Line:     line,
+			File:     file,
+			Endpoint: endpoint,
+		}
+	}
+	return e
+}
+
 // NewSkipCaller error detail with message values separate per space and skipCaller
 func NewSkipCaller(skipCaller int, message ...any) error {
 	_, file, line, _ := runtime.Caller(skipCaller)
@@ -66,7 +87,7 @@ func NewSkipCaller(skipCaller int, message ...any) error {
 }
 
 // NewESkipCaller error detail with message values separate per space with skipCaller and endpoint
-func NewESkipCaller(skipCaller int, endpoint string, message ...any) *errorDetail {
+func NewESkipCaller(skipCaller int, endpoint string, message ...any) error {
 	_, file, line, _ := runtime.Caller(skipCaller)
 	return &errorDetail{
 		Message:  printMessage(message...),
@@ -80,6 +101,10 @@ func NewESkipCaller(skipCaller int, endpoint string, message ...any) *errorDetai
 func NewByErrSkipCaller(skipCaller int, err error) error {
 	var e *errorDetail
 	if helper.IsNotNil(err) {
+		e, _ = parseErrorToDetail(err)
+		if helper.IsNotNil(e) {
+			return e
+		}
 		_, file, line, _ := runtime.Caller(skipCaller)
 		e = &errorDetail{
 			Message: err.Error(),
@@ -94,6 +119,10 @@ func NewByErrSkipCaller(skipCaller int, err error) error {
 func NewEByErrSkipCaller(skipCaller int, err error, endpoint string) error {
 	var e *errorDetail
 	if helper.IsNotNil(err) {
+		e, _ = parseErrorToDetail(err)
+		if helper.IsNotNil(e) {
+			return e
+		}
 		_, file, line, _ := runtime.Caller(skipCaller)
 		e = &errorDetail{
 			Message:  err.Error(),
@@ -107,9 +136,9 @@ func NewEByErrSkipCaller(skipCaller int, err error, endpoint string) error {
 
 // Is validate equal errors, if errorDetail we only consider the errorDetail.Message field
 func Is(err, target error) bool {
-	if IsErrorDetail(err) && IsErrorDetail(target) {
-		errDetail, _ := parseErrorToDetail(err)
-		targetDetail, _ := parseErrorToDetail(target)
+	errDetail, _ := parseErrorToDetail(err)
+	targetDetail, _ := parseErrorToDetail(target)
+	if helper.IsNotNil(errDetail) && helper.IsNotNil(targetDetail) {
 		return equal(*errDetail, *targetDetail)
 	}
 	return errors.Is(err, target)
@@ -137,11 +166,14 @@ func equal(a, b errorDetail) bool {
 }
 
 func printMessage(v ...any) string {
-	return strings.Replace(fmt.Sprintln(v...), "\n", "", -1)
+	return helper.Sprintln(v...)
 }
 
 func parseErrorToDetail(err error) (*errorDetail, error) {
 	var dest errorDetail
 	errConvert := helper.ConvertToDest(err, &dest)
+	if helper.IsNotNil(errConvert) {
+		return nil, errConvert
+	}
 	return &dest, errConvert
 }

@@ -12,10 +12,16 @@ func TestNew(t *testing.T) {
 
 func TestNewByErr(t *testing.T) {
 	logger.Info("err:", NewByErr(errors.New("test error detail")))
+	logger.Info("err:", NewByErr(New("test error detail")))
 }
 
 func TestNewE(t *testing.T) {
 	logger.Info("err:", NewE("/test", errors.New("test error detail")))
+}
+
+func TestNewEByErr(t *testing.T) {
+	logger.Info("err:", NewEByErr("/test", errors.New("test error detail")))
+	logger.Info("err:", NewEByErr("/test", New("test error detail")))
 }
 
 func TestNewESkipCaller(t *testing.T) {
@@ -28,10 +34,12 @@ func TestNewSkipCaller(t *testing.T) {
 
 func TestNewByErrSkipCaller(t *testing.T) {
 	logger.Info("err:", NewByErrSkipCaller(1, errors.New("test error detail")))
+	logger.Info("err:", NewByErrSkipCaller(1, New("test error detail")))
 }
 
 func TestNewEByErrSkipCaller(t *testing.T) {
 	logger.Info("err:", NewEByErrSkipCaller(1, errors.New("test error detail"), "/test"))
+	logger.Info("err:", NewEByErrSkipCaller(1, New("test error detail"), "/test"))
 }
 
 func TestIs(t *testing.T) {
@@ -57,4 +65,9 @@ func TestIsNot(t *testing.T) {
 func TestError(t *testing.T) {
 	err := New("test error detail")
 	logger.Info("err:", err.Error())
+}
+
+func TestIsErrorDetail(t *testing.T) {
+	err := New("test error detail")
+	logger.Info("err:", IsErrorDetail(err))
 }
