@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/GabrielHCataldo/go-errors/errors"
 	"github.com/GabrielHCataldo/go-logger/logger"
 )
@@ -19,18 +18,12 @@ func simple() error {
 func all() {
 	err := errors.New("error by message with any value", 2)
 	logger.Error(err)
-	err = errors.NewE("/endpoint", "error by message with any value", 2)
+	err = errors.NewEndpoint("/endpoint", "error by message with any value", 2)
 	logger.Error(err)
 	err = errors.NewSkipCaller(1, "error by message with any value", 2)
 	logger.Error(err)
-	err = errors.NewESkipCaller(1, "/endpoint", "error by message with any value", 2)
+	err = errors.NewEndpointSkipCaller(1, "/endpoint", "error by message with any value", 2)
 	logger.Error(err)
-	_, errJson := json.Marshal(make(chan int))
-	logger.Error(errors.NewByErr(errJson))
-	logger.Error(errors.NewByErr(errJson).Error())
-	logger.Error(errors.NewByErrSkipCaller(1, errJson))
-	logger.Error(errors.NewEByErrSkipCaller(1, errJson, "/endpoint"))
-	logger.Error(errors.NewEByErrSkipCaller(1, errJson, "/endpoint"))
 	err = errors.New("test")
 	target := errors.New("test")
 	logger.Info("errors is:", errors.Is(err, target))
