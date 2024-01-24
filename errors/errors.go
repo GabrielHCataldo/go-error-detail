@@ -1,114 +1,102 @@
 package errors
 
 import (
-	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/GabrielHCataldo/go-helper/helper"
-	"runtime"
+	"regexp"
 )
 
-type Error struct {
-	// File name file from caller new error
-	File string `json:"file,omitempty"`
-	// Line from caller new error
-	Line int `json:"line,omitempty"`
-	// Message error
-	Message string `json:"message,omitempty"`
-	// Endpoint from error
-	Endpoint string `json:"endpoint,omitempty"`
+const regexErrorDetail = `\[(.+?):(\d+)] (.+?): (.+)`
+
+type errorDetail struct {
+	file     string
+	line     string
+	funcName string
+	message  string
 }
 
-// New error detail with message values separate per space
-func New(message ...any) *Error {
-	_, file, line, _ := runtime.Caller(1)
-	return &Error{
-		Message: printMessage(message...),
-		Line:    line,
-		File:    file,
+// New error with space separated message values, if the message parameter is empty we return a
+// nil value, otherwise returns normal value
+func New(message ...any) error {
+	msg := printMessage(message...)
+	if helper.IsEmpty(msg) {
+		return nil
+	}
+	file, line, funcName := helper.GetCallerInfo(2)
+	return &errorDetail{
+		file:     file,
+		line:     line,
+		funcName: funcName,
+		message:  msg,
 	}
 }
 
-// NewEndpoint error detail with endpoint and message
-func NewEndpoint(endpoint string, message ...any) *Error {
-	_, file, line, _ := runtime.Caller(1)
-	return &Error{
-		Message:  printMessage(message...),
-		Line:     line,
-		File:     file,
-		Endpoint: endpoint,
+// NewSkipCaller error with message values separate per space and skipCaller, if the message parameter is empty we return a
+// nil value, otherwise returns normal value
+func NewSkipCaller(skipCaller int, message ...any) error {
+	msg := printMessage(message...)
+	if helper.IsEmpty(msg) {
+		return nil
+	}
+	file, line, funcName := helper.GetCallerInfo(skipCaller + 1)
+	return &errorDetail{
+		file:     file,
+		line:     line,
+		funcName: funcName,
+		message:  msg,
 	}
 }
 
-// NewSkipCaller error detail with message values separate per space and skipCaller
-func NewSkipCaller(skipCaller int, message ...any) *Error {
-	_, file, line, _ := runtime.Caller(skipCaller)
-	return &Error{
-		Message: printMessage(message...),
-		Line:    line,
-		File:    file,
-	}
-}
-
-// NewEndpointSkipCaller error detail with message values separate per space with skipCaller and endpoint
-func NewEndpointSkipCaller(skipCaller int, endpoint string, message ...any) *Error {
-	_, file, line, _ := runtime.Caller(skipCaller)
-	return &Error{
-		Message:  printMessage(message...),
-		Line:     line,
-		File:     file,
-		Endpoint: endpoint,
-	}
-}
-
-// Is validate equal errors, if errorDetail we only consider the errorDetail.Message field
+// Is validate equal errors
 func Is(err, target error) bool {
-	errDetail, _ := parseToError(err)
-	targetDetail, _ := parseToError(target)
-	if helper.IsNotNil(errDetail) && helper.IsNotNil(targetDetail) {
-		return equal(*errDetail, *targetDetail)
+	if IsErrorDetail(err) {
+		_, _, _, message := GetErrorDetails(err)
+		err = errors.New(message)
 	}
-	return errors.Is(err, target)
+	if IsErrorDetail(target) {
+		_, _, _, message := GetErrorDetails(target)
+		target = errors.New(message)
+	}
+	return helper.IsNotNil(err) && helper.IsEqual(err, target)
 }
 
-// IsNot validate not equal errors, if errorDetail we only consider the errorDetail.Message field
+// IsNot validate not equal errors
 func IsNot(err, target error) bool {
 	return !Is(err, target)
 }
 
-// IsErrorDetail check if error interface is errorDetail
-func IsErrorDetail(err error) bool {
-	_, errParse := parseToError(err)
-	return errParse == nil
-}
-
 // Error print the error as a string, genetic implementation of error in go
-func (e *Error) Error() string {
-	b, _ := json.Marshal(e)
-	return string(b)
+func (e *errorDetail) Error() string {
+	return fmt.Sprint("[", e.file, ":", e.line, "]", " ", e.funcName, ": ", e.message)
 }
 
-// ParseToError parse value to error struct, if value an is not an Error, we create a new one from it as Error.Message.
-func ParseToError(a any) *Error {
-	result, err := parseToError(a)
-	if helper.IsNotNil(err) {
-		return NewSkipCaller(2, a)
+// IsErrorDetail check if the error is an errorDetail containing the pattern with file name, line, function name
+// and message
+func IsErrorDetail(err error) bool {
+	regex := regexp.MustCompile(regexErrorDetail)
+	return helper.IsNotNil(err) && regex.MatchString(err.Error())
+}
+
+// GetErrorDetails we obtain the values of an error detail separately, if the parameter is nil we return all empty
+// values, and if the passed error parameter is not in the desired pattern, we return only the filled message and the
+// rest empty.
+func GetErrorDetails(err error) (file, line, funcName, message string) {
+	if helper.IsNil(err) {
+		return
 	}
-	return result
-}
-
-func equal(a, b Error) bool {
-	return a.Message == b.Message
+	message = err.Error()
+	regex := regexp.MustCompile(regexErrorDetail)
+	matches := regex.FindStringSubmatch(message)
+	if helper.IsNotEmpty(matches) {
+		file = matches[1]
+		line = matches[2]
+		funcName = matches[3]
+		message = matches[4]
+	}
+	return
 }
 
 func printMessage(v ...any) string {
 	return helper.Sprintln(v...)
-}
-
-func parseToError(a any) (*Error, error) {
-	var dest Error
-	errConvert := helper.ConvertToDest(a, &dest)
-	if helper.IsNotNil(errConvert) {
-		return nil, errConvert
-	}
-	return &dest, errConvert
 }

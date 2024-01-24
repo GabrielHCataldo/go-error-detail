@@ -8,18 +8,12 @@ import (
 
 func TestNew(t *testing.T) {
 	logger.Info("err:", New("test error detail"))
-}
-
-func TestNewE(t *testing.T) {
-	logger.Info("err:", NewEndpoint("/test", errors.New("test error detail")))
-}
-
-func TestNewESkipCaller(t *testing.T) {
-	logger.Info("err:", NewEndpointSkipCaller(1, "/test", errors.New("test error detail")))
+	logger.Info("err:", New(""))
 }
 
 func TestNewSkipCaller(t *testing.T) {
 	logger.Info("err:", NewSkipCaller(1, "test error detail"))
+	logger.Info("err:", NewSkipCaller(1, ""))
 }
 
 func TestIs(t *testing.T) {
@@ -30,6 +24,7 @@ func TestIs(t *testing.T) {
 	errDetail := New("test")
 	targetDetail := New("test")
 	logger.Info("errors is:", Is(errDetail, targetDetail))
+	logger.Info("errors is:", Is(nil, nil))
 }
 
 func TestIsNot(t *testing.T) {
@@ -52,9 +47,13 @@ func TestIsErrorDetail(t *testing.T) {
 	logger.Info("err:", IsErrorDetail(err))
 }
 
-func TestParseToError(t *testing.T) {
+func TestGetErrorDetails(t *testing.T) {
 	err := New("test error detail").Error()
-	logger.Info("err:", ParseToError(err))
+	file, line, funcName, message := GetErrorDetails(errors.New(err))
+	logger.Info("details:", file, line, funcName, message)
 	v := "test"
-	logger.Info("err:", ParseToError(v))
+	file, line, funcName, message = GetErrorDetails(errors.New(v))
+	logger.Info("details:", file, line, funcName, message)
+	file, line, funcName, message = GetErrorDetails(nil)
+	logger.Info("details:", file, line, funcName, message)
 }
