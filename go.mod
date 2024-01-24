@@ -4,7 +4,7 @@ go 1.21.3
 
 require (
 	github.com/GabrielHCataldo/go-helper v1.2.9
-	github.com/GabrielHCataldo/go-logger v1.0.9
+	github.com/GabrielHCataldo/go-logger v1.1.6
 )
 
 require (
