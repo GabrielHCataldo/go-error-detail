@@ -58,7 +58,7 @@ func Is(err, target error) bool {
 		_, _, _, message := GetErrorDetails(target)
 		target = errors.New(message)
 	}
-	return helper.IsNotNil(err) && helper.IsEqual(err, target)
+	return helper.IsNotNil(err) && helper.Equals(err, target)
 }
 
 // IsNot validate not equal errors

@@ -29,11 +29,11 @@ func TestIs(t *testing.T) {
 
 func TestIsNot(t *testing.T) {
 	err := errors.New("test")
-	target := New("test")
+	target := New("test2")
 	logger.Info("errors is not:", IsNot(err, target))
 
 	errDetail := New("test")
-	targetDetail := New("test")
+	targetDetail := New("test2")
 	logger.Info("errors is not:", IsNot(errDetail, targetDetail))
 }
 
