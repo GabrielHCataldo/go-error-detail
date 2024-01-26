@@ -3,7 +3,7 @@ Go Errors Detail
 <!--suppress ALL -->
 <img align="right" src="gopher-debug.png" alt="">
 
-[![Project status](https://img.shields.io/badge/version-v1.0.9-vividgreen.svg)](https://github.com/GabrielHCataldo/go-errors/releases/tag/v1.0.9)
+[![Project status](https://img.shields.io/badge/version-v1.1.0-vividgreen.svg)](https://github.com/GabrielHCataldo/go-errors/releases/tag/v1.1.0)
 [![Go Report Card](https://goreportcard.com/badge/github.com/GabrielHCataldo/go-errors)](https://goreportcard.com/report/github.com/GabrielHCataldo/go-errors)
 [![Coverage Status](https://coveralls.io/repos/GabrielHCataldo/go-errors/badge.svg?branch=main&service=github)](https://coveralls.io/github/GabrielHCataldo/go-errors?branch=main)
 [![Open Source Helpers](https://www.codetriage.com/gabrielhcataldo/go-errors/badges/users.svg)](https://www.codetriage.com/gabrielhcataldo/go-errors)
@@ -16,8 +16,8 @@ Go Errors Detail
 
 [//]: # ([![TODOs]&#40;https://badgen.net/https/api.tickgit.com/badgen/github.com/GabrielHCataldo/go-errors/errors&#41;]&#40;https://www.tickgit.com/browse?repo=github.com/GabrielHCataldo/go-errors&#41;)
 
-The go-errors project came to make the return of errors, very common in Golang, clearer, thus facilitating the 
-debugging of your applications.
+The go-errors project came to clarify the return of errors, which are very common in Golang, thus facilitating the
+debugging your projects.
 
 Installation
 ------------
@@ -35,7 +35,7 @@ import "github.com/GabrielHCataldo/go-errors/errors"
 Usability and documentation
 ------------
 **IMPORTANT**: Always check the documentation in the structures and functions fields.
-For more details on the examples, visit [All examples link](https://github/GabrielHCataldo/go-errors/blob/main/_example/main)
+For more details on the examples, visit [All examples link](https://github/GabrielHCataldo/go-errors/blob/main/_example/main).
 
 ### Simple example
 
@@ -49,7 +49,12 @@ import (
 
 func main() {
     err := simple()
-    logger.Error("simple err:", err)
+    logger.Info("simple err msg:", errors.Details(err).GetMessage())
+    logger.Info("simple err file:", errors.Details(err).GetFile())
+    logger.Info("simple err line:", errors.Details(err).GetLine())
+    logger.Info("simple err func:", errors.Details(err).GetFuncName())
+    errors.Details(err).PrintCause()
+    errors.Details(err).PrintStackTrace()
 }
 
 func simple() error {
@@ -59,7 +64,12 @@ func simple() error {
 
 Output:
 
-    [ERROR 2024/01/24 05:05:25] main.go:10: simple err: [_example/main.go:14] simple: error by message with any value 2 true
+    [INFO 2024/01/26 10:16:38] _example/main.go:12: simple err msg: error by message with any value 2 true
+    [INFO 2024/01/26 10:16:38] _example/main.go:13: simple err file: _example/main.go
+    [INFO 2024/01/26 10:16:38] _example/main.go:14: simple err line: 25
+    [INFO 2024/01/26 10:16:38] _example/main.go:15: simple err func: simple
+    [ERROR 2024/01/26 10:16:38] _example/main.go:16: (_example/main.go:25) simple: error by message with any value 2 true
+    [ERROR 2024/01/26 10:16:38] _example/main.go:17: goroutine 1 [running]:
 
 How to contribute
 ------

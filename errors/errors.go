@@ -9,7 +9,7 @@ import (
 	"runtime/debug"
 )
 
-const regexErrorDetail = `\[(.+?):(\d+)] (.+?): (.+)`
+const regexErrorDetail = `CAUSE: \(([^:]+):(\d+)\) (.+): (.+) STACK:\s*(.+)`
 
 type ErrorDetail struct {
 	file       string
@@ -21,7 +21,7 @@ type ErrorDetail struct {
 
 // New error with space separated message values, if the message parameter is empty we return a
 // nil value, otherwise returns normal value
-func New(message ...any) *ErrorDetail {
+func New(message ...any) error {
 	msg := printMessage(message...)
 	if helper.IsEmpty(msg) {
 		return nil
@@ -39,7 +39,7 @@ func New(message ...any) *ErrorDetail {
 
 // NewSkipCaller error with message values separate per space and skipCaller, if the message parameter is empty we return a
 // nil value, otherwise returns normal value
-func NewSkipCaller(skipCaller int, message ...any) *ErrorDetail {
+func NewSkipCaller(skipCaller int, message ...any) error {
 	msg := printMessage(message...)
 	if helper.IsEmpty(msg) {
 		return nil
@@ -58,12 +58,12 @@ func NewSkipCaller(skipCaller int, message ...any) *ErrorDetail {
 // Is validate equal errors
 func Is(err, target error) bool {
 	if IsErrorDetail(err) {
-		_, _, _, message := GetErrorDetails(err)
-		err = errors.New(message)
+		errDetails := Details(err)
+		err = errors.New(errDetails.GetMessage())
 	}
 	if IsErrorDetail(target) {
-		_, _, _, message := GetErrorDetails(target)
-		target = errors.New(message)
+		errDetails := Details(target)
+		target = errors.New(errDetails.GetMessage())
 	}
 	return helper.IsNotNil(err) && helper.Equals(err, target)
 }
@@ -75,12 +75,22 @@ func IsNot(err, target error) bool {
 
 // Error print the error as a string, genetic implementation of error in go
 func (e *ErrorDetail) Error() string {
-	return fmt.Sprint("[", e.file, ":", e.line, "]", " ", e.funcName, ": ", e.message)
+	return fmt.Sprint("CAUSE: ", e.GetCause(), " STACK: \n", e.debugStack)
 }
 
-// PrintStack print red message with detail error and debug stack
-func (e *ErrorDetail) PrintStack() {
-	logger.ErrorSkipCaller(2, "Error:", e.Error(), "Stack:", e.debugStack)
+// PrintStackTrace print red message with detail error and debug stack
+func (e *ErrorDetail) PrintStackTrace() {
+	logger.ErrorSkipCaller(2, e.debugStack)
+}
+
+// PrintCause print red message with cause error
+func (e *ErrorDetail) PrintCause() {
+	logger.ErrorSkipCaller(2, e.GetCause())
+}
+
+// GetCause returns formatted error cause
+func (e *ErrorDetail) GetCause() string {
+	return fmt.Sprint("(", e.file, ":", e.line, ")", " ", e.funcName, ": ", e.message)
 }
 
 // GetMessage returns the value of the error message field
@@ -108,30 +118,44 @@ func (e *ErrorDetail) GetDebugStack() string {
 	return e.debugStack
 }
 
-// IsErrorDetail check if the error is an ErrorDetail containing the pattern with file name, line, function name
-// and message
+// IsErrorDetail check if the error is an ErrorDetail containing the pattern with file name, line, function name,
+// message and debugStack
 func IsErrorDetail(err error) bool {
 	regex := regexp.MustCompile(regexErrorDetail)
 	return helper.IsNotNil(err) && regex.MatchString(err.Error())
 }
 
-// GetErrorDetails we obtain the values of an error detail separately, if the parameter is nil we return all empty
-// values, and if the passed error parameter is not in the desired pattern, we return only the filled message and the
-// rest empty.
-func GetErrorDetails(err error) (file, line, funcName, message string) {
+// Details we obtain the values of an error passed in the parameter, and transform them into an ErrorDetail object, if
+// the passed parameter is null, the return will also be null and if it is not in the desired errorDetail pattern, we
+// return a new ErrDetail with the message being the err passed in the parameter.
+func Details(err error) *ErrorDetail {
 	if helper.IsNil(err) {
-		return
+		return nil
 	}
-	message = err.Error()
+	var file string
+	var line string
+	var funcName string
+	var message string
+	var debugStack string
 	regex := regexp.MustCompile(regexErrorDetail)
-	matches := regex.FindStringSubmatch(message)
+	matches := regex.FindStringSubmatch(err.Error())
 	if helper.IsNotEmpty(matches) {
 		file = matches[1]
 		line = matches[2]
 		funcName = matches[3]
 		message = matches[4]
+		debugStack = matches[5]
+	} else {
+		file, line, funcName = helper.GetCallerInfo(2)
+		debugStack = string(debug.Stack())
 	}
-	return
+	return &ErrorDetail{
+		file:       file,
+		line:       line,
+		funcName:   funcName,
+		message:    message,
+		debugStack: debugStack,
+	}
 }
 
 func printMessage(v ...any) string {

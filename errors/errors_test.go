@@ -12,8 +12,10 @@ func TestNew(t *testing.T) {
 }
 
 func TestNewSkipCaller(t *testing.T) {
-	logger.Info("err:", NewSkipCaller(1, "test error detail"))
-	logger.Info("err:", NewSkipCaller(1, ""))
+	err := NewSkipCaller(1, "test error detail")
+	logger.Info("err:", err)
+	err = NewSkipCaller(1, nil)
+	logger.Info("err:", err)
 }
 
 func TestIs(t *testing.T) {
@@ -44,37 +46,37 @@ func TestError(t *testing.T) {
 
 func TestErrorPrintStack(t *testing.T) {
 	err := New("test error detail")
-	err.PrintStack()
+	Details(err).PrintStackTrace()
+}
+
+func TestErrorPrintCause(t *testing.T) {
+	err := New("test error detail")
+	Details(err).PrintCause()
 }
 
 func TestErrorGetMessage(t *testing.T) {
 	err := New("test error detail")
-	err.GetMessage()
-	logger.Info("err message:", err.GetMessage())
+	logger.Info("err message:", Details(err).GetMessage())
 }
 
 func TestErrorGetFile(t *testing.T) {
 	err := New("test error detail")
-	err.GetMessage()
-	logger.Info("err message:", err.GetFile())
+	logger.Info("err file:", Details(err).GetFile())
 }
 
 func TestErrorGetLine(t *testing.T) {
 	err := New("test error detail")
-	err.GetMessage()
-	logger.Info("err message:", err.GetLine())
+	logger.Info("err line:", Details(err).GetLine())
 }
 
 func TestErrorGetFuncName(t *testing.T) {
 	err := New("test error detail")
-	err.GetMessage()
-	logger.Info("err message:", err.GetFuncName())
+	logger.Info("err message:", Details(err).GetFuncName())
 }
 
 func TestErrorGetDebugStack(t *testing.T) {
 	err := New("test error detail")
-	err.GetMessage()
-	logger.Info("err message:", err.GetDebugStack())
+	logger.Info("err message:", Details(err).GetDebugStack())
 }
 
 func TestIsErrorDetail(t *testing.T) {
@@ -82,13 +84,8 @@ func TestIsErrorDetail(t *testing.T) {
 	logger.Info("err:", IsErrorDetail(err))
 }
 
-func TestGetErrorDetails(t *testing.T) {
-	err := New("test error detail").Error()
-	file, line, funcName, message := GetErrorDetails(errors.New(err))
-	logger.Info("details:", file, line, funcName, message)
-	v := "test"
-	file, line, funcName, message = GetErrorDetails(errors.New(v))
-	logger.Info("details:", file, line, funcName, message)
-	file, line, funcName, message = GetErrorDetails(nil)
-	logger.Info("details:", file, line, funcName, message)
+func TestDetails(t *testing.T) {
+	logger.Info("err details:", Details(nil))
+	logger.Info("err details:", Details(errors.New("test")))
+	logger.Info("err details:", Details(New("test")))
 }
