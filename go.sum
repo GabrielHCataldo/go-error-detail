@@ -1,9 +1,11 @@
-github.com/GabrielHCataldo/go-helper v1.2.9 h1:GLIj6vwvBHEeGdwPoIaenpxB7C7D/IPmOxrLudhyviY=
-github.com/GabrielHCataldo/go-helper v1.2.9/go.mod h1:+whI36aUg1BfvLpZWJ8j81+d5iPuxl58ApOJqTIliCU=
-github.com/GabrielHCataldo/go-logger v1.0.9 h1:dhg/Zrxl8iygjEO/rQezsZk6v9RCsEnch30hYwUGK8U=
-github.com/GabrielHCataldo/go-logger v1.0.9/go.mod h1:xFMqeAgNIh2QK0wYTMbcxByzC2cXOU3mb+olBgXxgl8=
-github.com/GabrielHCataldo/go-logger v1.1.6 h1:D1fFmDy+94QtPyuhOz1F6H7jFxnFd5/+rF1iLyt2J0E=
-github.com/GabrielHCataldo/go-logger v1.1.6/go.mod h1:Z+bJSxDzm0vLzV93qn+FOPbiQ3XX2JIaSABA0++Z9r0=
+github.com/GabrielHCataldo/go-helper v1.3.3 h1:9KA/3GSkHB5SjkFOY+DuZHSHSxjNo/SQkOnWXdBghzg=
+github.com/GabrielHCataldo/go-helper v1.3.3/go.mod h1:+whI36aUg1BfvLpZWJ8j81+d5iPuxl58ApOJqTIliCU=
+github.com/GabrielHCataldo/go-logger v1.1.7 h1:gKaAq6TKeQg1JLj1/JsX0KCDyPAlzVnXP8JkUXmJnOs=
+github.com/GabrielHCataldo/go-logger v1.1.7/go.mod h1:6HLmtLsXEyAzKPBRvkfue2Jb4ixXrwqb0kF5SwVZzJc=
+github.com/GabrielHCataldo/go-logger v1.1.8 h1:Z/n6GviQ7kegR43v9f1R/hVPZbZeb7JnXB6shzLhkfM=
+github.com/GabrielHCataldo/go-logger v1.1.8/go.mod h1:6HLmtLsXEyAzKPBRvkfue2Jb4ixXrwqb0kF5SwVZzJc=
+github.com/GabrielHCataldo/go-logger v1.1.9 h1:ULhYfBYLAS8xqs7MWx0ig45Y1A6RioWwMN2GWqjIm1Y=
+github.com/GabrielHCataldo/go-logger v1.1.9/go.mod h1:6HLmtLsXEyAzKPBRvkfue2Jb4ixXrwqb0kF5SwVZzJc=
 github.com/cockroachdb/apd v1.1.0 h1:3LFP3629v+1aKXU5Q37mxmRxX/pIu1nijXydLShEq5I=
 github.com/cockroachdb/apd v1.1.0/go.mod h1:8Sl8LxpKi29FqWXR16WEFZRNSz3SoPzUzeMeY4+DwBQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

@@ -4,47 +4,54 @@ import (
 	"errors"
 	"fmt"
 	"github.com/GabrielHCataldo/go-helper/helper"
+	"github.com/GabrielHCataldo/go-logger/logger"
 	"regexp"
+	"runtime/debug"
 )
 
 const regexErrorDetail = `\[(.+?):(\d+)] (.+?): (.+)`
 
-type errorDetail struct {
-	file     string
-	line     string
-	funcName string
-	message  string
+type ErrorDetail struct {
+	file       string
+	line       string
+	funcName   string
+	message    string
+	debugStack string
 }
 
 // New error with space separated message values, if the message parameter is empty we return a
 // nil value, otherwise returns normal value
-func New(message ...any) error {
+func New(message ...any) *ErrorDetail {
 	msg := printMessage(message...)
 	if helper.IsEmpty(msg) {
 		return nil
 	}
 	file, line, funcName := helper.GetCallerInfo(2)
-	return &errorDetail{
-		file:     file,
-		line:     line,
-		funcName: funcName,
-		message:  msg,
+	debugStack := debug.Stack()
+	return &ErrorDetail{
+		file:       file,
+		line:       line,
+		funcName:   funcName,
+		message:    msg,
+		debugStack: string(debugStack),
 	}
 }
 
 // NewSkipCaller error with message values separate per space and skipCaller, if the message parameter is empty we return a
 // nil value, otherwise returns normal value
-func NewSkipCaller(skipCaller int, message ...any) error {
+func NewSkipCaller(skipCaller int, message ...any) *ErrorDetail {
 	msg := printMessage(message...)
 	if helper.IsEmpty(msg) {
 		return nil
 	}
 	file, line, funcName := helper.GetCallerInfo(skipCaller + 1)
-	return &errorDetail{
-		file:     file,
-		line:     line,
-		funcName: funcName,
-		message:  msg,
+	debugStack := debug.Stack()
+	return &ErrorDetail{
+		file:       file,
+		line:       line,
+		funcName:   funcName,
+		message:    msg,
+		debugStack: string(debugStack),
 	}
 }
 
@@ -67,11 +74,41 @@ func IsNot(err, target error) bool {
 }
 
 // Error print the error as a string, genetic implementation of error in go
-func (e *errorDetail) Error() string {
+func (e *ErrorDetail) Error() string {
 	return fmt.Sprint("[", e.file, ":", e.line, "]", " ", e.funcName, ": ", e.message)
 }
 
-// IsErrorDetail check if the error is an errorDetail containing the pattern with file name, line, function name
+// PrintStack print red message with detail error and debug stack
+func (e *ErrorDetail) PrintStack() {
+	logger.ErrorSkipCaller(2, "Error:", e.Error(), "Stack:", e.debugStack)
+}
+
+// GetMessage returns the value of the error message field
+func (e *ErrorDetail) GetMessage() string {
+	return e.message
+}
+
+// GetFile returns the value of the error file field
+func (e *ErrorDetail) GetFile() string {
+	return e.file
+}
+
+// GetLine returns the value of the error line field
+func (e *ErrorDetail) GetLine() int {
+	return helper.SimpleConvertToInt(e.line)
+}
+
+// GetFuncName returns the value of the error funcName field
+func (e *ErrorDetail) GetFuncName() string {
+	return e.funcName
+}
+
+// GetDebugStack returns the value of the error debugStack field
+func (e *ErrorDetail) GetDebugStack() string {
+	return e.debugStack
+}
+
+// IsErrorDetail check if the error is an ErrorDetail containing the pattern with file name, line, function name
 // and message
 func IsErrorDetail(err error) bool {
 	regex := regexp.MustCompile(regexErrorDetail)

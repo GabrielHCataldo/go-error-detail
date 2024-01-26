@@ -42,6 +42,41 @@ func TestError(t *testing.T) {
 	logger.Info("err:", err.Error())
 }
 
+func TestErrorPrintStack(t *testing.T) {
+	err := New("test error detail")
+	err.PrintStack()
+}
+
+func TestErrorGetMessage(t *testing.T) {
+	err := New("test error detail")
+	err.GetMessage()
+	logger.Info("err message:", err.GetMessage())
+}
+
+func TestErrorGetFile(t *testing.T) {
+	err := New("test error detail")
+	err.GetMessage()
+	logger.Info("err message:", err.GetFile())
+}
+
+func TestErrorGetLine(t *testing.T) {
+	err := New("test error detail")
+	err.GetMessage()
+	logger.Info("err message:", err.GetLine())
+}
+
+func TestErrorGetFuncName(t *testing.T) {
+	err := New("test error detail")
+	err.GetMessage()
+	logger.Info("err message:", err.GetFuncName())
+}
+
+func TestErrorGetDebugStack(t *testing.T) {
+	err := New("test error detail")
+	err.GetMessage()
+	logger.Info("err message:", err.GetDebugStack())
+}
+
 func TestIsErrorDetail(t *testing.T) {
 	err := New("test error detail")
 	logger.Info("err:", IsErrorDetail(err))
