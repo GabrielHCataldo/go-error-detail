@@ -3,8 +3,8 @@ module github.com/GabrielHCataldo/go-errors
 go 1.21.3
 
 require (
-	github.com/GabrielHCataldo/go-helper v1.3.3
-	github.com/GabrielHCataldo/go-logger v1.1.9
+	github.com/GabrielHCataldo/go-helper v1.3.4
+	github.com/GabrielHCataldo/go-logger v1.2.0
 )
 
 require (
