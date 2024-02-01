@@ -39,6 +39,26 @@ func TestIsNot(t *testing.T) {
 	logger.Info("errors is not:", IsNot(errDetail, targetDetail))
 }
 
+func TestContains(t *testing.T) {
+	err := errors.New("test")
+	target := New("test")
+	logger.Info("errors contains:", Contains(err, target))
+
+	errDetail := New("test")
+	targetDetail := New("test2")
+	logger.Info("errors contains:", Contains(errDetail, targetDetail))
+}
+
+func TestNotContains(t *testing.T) {
+	err := errors.New("test")
+	target := New("test")
+	logger.Info("errors not contains:", NotContains(err, target))
+
+	errDetail := New("test")
+	targetDetail := New("test2")
+	logger.Info("errors not contains:", NotContains(errDetail, targetDetail))
+}
+
 func TestError(t *testing.T) {
 	err := New("test error detail")
 	logger.Info("err:", err.Error())

@@ -7,6 +7,7 @@ import (
 	"github.com/GabrielHCataldo/go-logger/logger"
 	"regexp"
 	"runtime/debug"
+	"strings"
 )
 
 const regexErrorDetail = `CAUSE: \(([^:]+):(\d+)\) (.+): (.+) STACK:\s*(.+)`
@@ -71,6 +72,24 @@ func Is(err, target error) bool {
 // IsNot validate not equal errors
 func IsNot(err, target error) bool {
 	return !Is(err, target)
+}
+
+// Contains validate message target contains on message err
+func Contains(err, target error) bool {
+	if IsErrorDetail(err) {
+		errDetails := Details(err)
+		err = errors.New(errDetails.GetMessage())
+	}
+	if IsErrorDetail(target) {
+		errDetails := Details(target)
+		target = errors.New(errDetails.GetMessage())
+	}
+	return helper.IsNotNil(err) && helper.IsNotNil(target) && strings.Contains(err.Error(), target.Error())
+}
+
+// NotContains validate message target not contains on message err
+func NotContains(err, target error) bool {
+	return !Contains(err, target)
 }
 
 // Error print the error as a string, genetic implementation of error in go
