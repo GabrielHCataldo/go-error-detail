@@ -49,6 +49,7 @@ import (
 
 func main() {
     err := simple()
+    logger.Info("simple err:", err)
     logger.Info("simple err msg:", errors.Details(err).GetMessage())
     logger.Info("simple err file:", errors.Details(err).GetFile())
     logger.Info("simple err line:", errors.Details(err).GetLine())
@@ -64,6 +65,16 @@ func simple() error {
 
 Output:
 
+    [INFO 2024/01/26 10:16:38] _example/main.go:12: simple err: [CAUSE]: (_example/main.go:25) simple: error by message with any value 2 true [STACK]:
+    goroutine 1 [running]:
+    runtime/debug.Stack()
+        /Users/gabrielcataldo/go/go1.21.3/src/runtime/debug/stack.go:24 +0x64
+    github.com/GabrielHCataldo/go-errors/errors.New({0x1400039fd18?, 0x0?, 0x1400039fc38?})
+        /Users/gabrielcataldo/Innovfor/GabrielHCataldo/go-errors/errors/errors.go:31 +0xe0
+    main.simple(...)
+        /Users/gabrielcataldo/Innovfor/GabrielHCataldo/go-errors/_example/main.go:25
+    main.main()
+        /Users/gabrielcataldo/Innovfor/GabrielHCataldo/go-errors/_example/main.go:11 +0x88
     [INFO 2024/01/26 10:16:38] _example/main.go:12: simple err msg: error by message with any value 2 true
     [INFO 2024/01/26 10:16:38] _example/main.go:13: simple err file: _example/main.go
     [INFO 2024/01/26 10:16:38] _example/main.go:14: simple err line: 25

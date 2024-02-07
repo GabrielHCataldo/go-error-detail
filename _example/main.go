@@ -9,6 +9,7 @@ import (
 
 func main() {
 	err := simple()
+	logger.Info("simple err:", err)
 	logger.Info("simple err msg:", errors.Details(err).GetMessage())
 	logger.Info("simple err file:", errors.Details(err).GetFile())
 	logger.Info("simple err line:", errors.Details(err).GetLine())
