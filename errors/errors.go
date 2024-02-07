@@ -178,6 +178,13 @@ func Details(err error) *ErrorDetail {
 }
 
 func printMessage(v ...any) string {
+	for i, iv := range v {
+		ivError, ok := iv.(error)
+		if helper.IsError(iv) && ok {
+			errDetail := Details(ivError)
+			v[i] = errDetail.message
+		}
+	}
 	msg := helper.Sprintln(v...)
 	msg = strings.ReplaceAll(msg, "[STACK]", "")
 	msg = strings.ReplaceAll(msg, "[CAUSE]", "")
