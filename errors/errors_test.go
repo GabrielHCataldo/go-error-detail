@@ -8,7 +8,7 @@ import (
 
 func TestNew(t *testing.T) {
 	logger.Info("err:", New("test error detail"))
-	logger.Info("err:", New("test error detail", New("sub error message")))
+	logger.Info("err:", New("test error detail", New("sub error message\ntest\ttes2")))
 	logger.Info("err:", New(""))
 }
 
