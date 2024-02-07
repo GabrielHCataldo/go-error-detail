@@ -167,6 +167,7 @@ func Details(err error) *ErrorDetail {
 	} else {
 		file, line, funcName = helper.GetCallerInfo(2)
 		debugStack = string(debug.Stack())
+		message = err.Error()
 	}
 	return &ErrorDetail{
 		file:       file,
