@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const regexErrorDetail = `\[CAUSE]: \(([^:]+):(\d+)\) ([^:]+): (.+?) \[STACK]:\s*(.+)`
+const regexErrorDetail = `\[CAUSE]: \(([^:]+):(\d+)\) ([^:]+): (.+?) \[STACK]:\s*([\s\S]+)`
 
 type ErrorDetail struct {
 	file       string
