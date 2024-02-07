@@ -100,11 +100,18 @@ func TestErrorGetDebugStack(t *testing.T) {
 }
 
 func TestIsErrorDetail(t *testing.T) {
-	err := New("test error detail")
+	err := New("test error detail:", 1, "test empty:", "another test", true)
+	logger.Info("err:", IsErrorDetail(err))
+}
+
+func TestDetail(t *testing.T) {
+	err := New("test error detail:", 1, "test empty:", "another test", true)
 	logger.Info("err:", IsErrorDetail(err))
 }
 
 func TestDetails(t *testing.T) {
+	err := New("test error detail:", nil, "test empty:", "another test: - STACK", true, "empty:")
+	logger.Info("err details:", Details(err))
 	logger.Info("err details:", Details(nil))
 	logger.Info("err details:", Details(errors.New("test")))
 	logger.Info("err details:", Details(New("test")))

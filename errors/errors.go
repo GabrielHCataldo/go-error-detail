@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const regexErrorDetail = `CAUSE: \(([^:]+):(\d+)\) (.+): (.+) STACK:\s*(.+)`
+const regexErrorDetail = `\[CAUSE]: \(([^:]+):(\d+)\) ([^:]+): (.+?) \[STACK]:\s*(.+)`
 
 type ErrorDetail struct {
 	file       string
@@ -94,7 +94,7 @@ func NotContains(err, target error) bool {
 
 // Error print the error as a string, genetic implementation of error in go
 func (e *ErrorDetail) Error() string {
-	return fmt.Sprint("CAUSE: ", e.GetCause(), " STACK: \n", e.debugStack)
+	return fmt.Sprint("[CAUSE]: ", e.GetCause(), " [STACK]: \n", e.debugStack)
 }
 
 // PrintStackTrace print red message with detail error and debug stack
@@ -178,5 +178,8 @@ func Details(err error) *ErrorDetail {
 }
 
 func printMessage(v ...any) string {
-	return helper.Sprintln(v...)
+	msg := helper.Sprintln(v...)
+	msg = strings.ReplaceAll(msg, "[STACK]", "")
+	msg = strings.ReplaceAll(msg, "[CAUSE]", "")
+	return msg
 }
