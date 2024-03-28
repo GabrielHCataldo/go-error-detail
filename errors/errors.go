@@ -181,7 +181,7 @@ func Details(err error) *ErrorDetail {
 func printMessage(v ...any) string {
 	for i, iv := range v {
 		ivError, ok := iv.(error)
-		if helper.IsError(iv) && ok {
+		if helper.IsErrorType(iv) && ok {
 			errDetail := Details(ivError)
 			v[i] = errDetail.message
 		}
