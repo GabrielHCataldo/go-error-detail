@@ -12,8 +12,21 @@ func TestNew(t *testing.T) {
 	logger.Info("err:", New(""))
 }
 
+func TestNewf(t *testing.T) {
+	logger.Info("err:", Newf("%s", "test error detail"))
+	logger.Info("err:", Newf("%s %s", "test error detail", New("sub error message\ntest\ttes2")))
+	logger.Info("err:", Newf("%s", ""))
+}
+
 func TestNewSkipCaller(t *testing.T) {
 	err := NewSkipCaller(1, "test error detail")
+	logger.Info("err:", err)
+	err = NewSkipCaller(1, nil)
+	logger.Info("err:", err)
+}
+
+func TestNewSkipCallerf(t *testing.T) {
+	err := NewSkipCallerf(1, "%s", "test error detail")
 	logger.Info("err:", err)
 	err = NewSkipCaller(1, nil)
 	logger.Info("err:", err)
